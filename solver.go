@@ -4,16 +4,16 @@ import (
 	"errors"
 )
 
-type Node struct {
-	Parent   *Node
+type SearchNode struct {
+	Parent   *SearchNode
 	Action   string
 	State    Board
 	PathCost int
 }
 
 func Solve(board Board) ([]string, error) {
-	frontier := []*Node{
-		&Node{
+	frontier := []*SearchNode{
+		&SearchNode{
 			Parent:   nil,
 			Action:   "",
 			State:    board,
@@ -35,7 +35,7 @@ func Solve(board Board) ([]string, error) {
 		}
 
 		for _, a := range Actions(node.State) {
-			child := &Node{
+			child := &SearchNode{
 				Parent:   node,
 				Action:   a,
 				State:    Result(node.State, a),
@@ -49,7 +49,7 @@ func Solve(board Board) ([]string, error) {
 	}
 }
 
-func rebuildPath(n *Node) []string {
+func rebuildPath(n *SearchNode) []string {
 	var path []string
 	for n.Parent != nil {
 		path = append([]string{n.Action}, path...)

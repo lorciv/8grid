@@ -46,10 +46,8 @@ func ParseBoard(str string) (Board, error) {
 			chars = append(chars, string(c))
 		}
 	}
-	if l := len(chars); l > 9 {
-		return Board{}, errors.New("invalid board format: too long")
-	} else if l < 9 {
-		return Board{}, errors.New("invalid board format: too short")
+	if len(chars) != 9 {
+		return Board{}, errors.New("invalid board format")
 	}
 
 	b := Board{}

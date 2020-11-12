@@ -1,24 +1,29 @@
 package main
 
 import (
-	"flag"
+	"fmt"
 	"io/ioutil"
 	"log"
+	"os"
 )
 
 func main() {
-	f := flag.String("f", "", "text file containing the puzzle")
-	flag.Parse()
+	log.SetFlags(0)
+	log.SetPrefix(os.Args[0][2:] + ": ")
 
-	var board Board
-	if *f != "" {
-		raw, err := ioutil.ReadFile(*f)
-		if err != nil {
-			log.Fatal(err)
-		}
-		board, err = ParseBoard(string(raw))
-		if err != nil {
-			log.Fatal(err)
-		}
+	buf, err := ioutil.ReadAll(os.Stdin)
+	if err != nil {
+		log.Fatal(err)
+	}
+	board, err := ParseBoard(string(buf))
+	if err != nil {
+		log.Fatal(err)
+	}
+	solution, err := Solve(board)
+	if err != nil {
+		log.Fatal(err)
+	}
+	for _, step := range solution {
+		fmt.Println(step)
 	}
 }
