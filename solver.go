@@ -22,10 +22,7 @@ func Solve(board Board) ([]string, error) {
 	}
 	explored := make(map[Board]bool)
 
-	for {
-		if len(frontier) == 0 {
-			return nil, errors.New("no solution found")
-		}
+	for len(frontier) > 0 {
 		node := frontier[0]
 		frontier = frontier[1:]
 		explored[node.State] = true
@@ -35,18 +32,20 @@ func Solve(board Board) ([]string, error) {
 		}
 
 		for _, a := range Actions(node.State) {
-			child := &SearchNode{
-				Parent:   node,
-				Action:   a,
-				State:    Result(node.State, a),
-				PathCost: node.PathCost + 1,
-			}
-			if explored[child.State] {
+			ns := Result(node.State, a)
+			if explored[ns] {
 				continue
 			}
-			frontier = append(frontier, child)
+			frontier = append(frontier, &SearchNode{
+				Parent:   node,
+				Action:   a,
+				State:    ns,
+				PathCost: node.PathCost + 1,
+			})
 		}
 	}
+
+	return nil, errors.New("no solution found")
 }
 
 func rebuildPath(n *SearchNode) []string {
